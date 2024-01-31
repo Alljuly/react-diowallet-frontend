@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+body,
+button[type="submit"],
+button {
 	background: rgb(238, 174, 202);
 	background: radial-gradient(
 		circle,
