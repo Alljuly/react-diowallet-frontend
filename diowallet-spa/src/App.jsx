@@ -1,9 +1,5 @@
-import Home from "./pages/Home";
+import { Outlet } from "react-router-dom";
 
 export default function App() {
-	return (
-		<main className="flex items-center justify-center h-screen">
-			<Home />
-		</main>
-	);
+	return <Outlet />;
 }
