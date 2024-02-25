@@ -3,15 +3,11 @@ import Button from "../components/Button";
 import LogoHeader from "../components/LogoHeader";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorInput from "../components/ErrorInput";
 
-const signinSchema = z.object({
-	email: z.string().nonempty("O email é obrigatório").email().toLowerCase(),
-	password: z.string().min(8),
-});
+import { signinSchema } from "../schemas/SigninSchema.js";
+import { signin } from "../services/user.js";
 
 export default function Signin() {
 	const {
@@ -21,7 +17,11 @@ export default function Signin() {
 	} = useForm({ resolver: zodResolver(signinSchema) });
 
 	function handleSubmitForm(data) {
-		console.log(data);
+		try {
+			signin(data);
+		} catch (error) {
+			console.log(error.message);
+		}
 	}
 	return (
 		<>
@@ -50,7 +50,7 @@ export default function Signin() {
 						/>
 						{errors.password && <ErrorInput text={errors.password.message} />}
 					</div>
-					<Button type="submit" text="SIGN IN" />
+					<Button type="submit" text="LOGIN" />
 				</form>
 				<p className="text-white text-sm align-center">
 					Dont have an account?{" "}

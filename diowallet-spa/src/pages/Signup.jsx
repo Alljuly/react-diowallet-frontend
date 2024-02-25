@@ -3,44 +3,27 @@ import Button from "../components/Button";
 import LogoHeader from "../components/LogoHeader";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-import z from "zod";
+import { signupSchema } from "../schemas/SignupSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorInput from "../components/ErrorInput";
-
-const signupSchema = z
-	.object({
-		name: z
-			.string()
-			.min(3, "O nome precisa ter no minimo 3 caracteres")
-			.transform((name) => {
-				return name
-					.trim()
-					.split("")
-					.map((word) => {
-						return word[0].toUpperCase().concat(word.substring());
-					});
-			}),
-		email: z.string().nonempty("O email é obrigatório").email().toLowerCase(),
-		password: z.string().min(8, "A senha precisa ter no minímo 8 caracteres"),
-		confirmPassword: z
-			.string()
-			.min(8, "A senha precisa ter no minímo 8 caracteres"),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "As senhas não correspondem",
-		path: ["confirmPassword"],
-	});
+import { signup } from "../services/user";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({ resolver: zodResolver(signupSchema) });
 
-	function handleFormSubmit(data) {
-		console.log(data);
+	async function handleFormSubmit(data) {
+		try {
+			await signup(data);
+			navigate("/signin");
+		} catch (error) {
+			console.log(error.message);
+		}
 	}
 
 	return (
@@ -89,7 +72,7 @@ export default function Signup() {
 							<ErrorInput text={errors.confirmPassword.message} />
 						)}
 					</div>
-					<Button type="submit" text="LOGIN" />	
+					<Button type="submit" text="REGISTER" />
 				</form>
 				<p className="text-white text-sm align-center">
 					Already have an account?{" "}
