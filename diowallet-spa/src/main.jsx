@@ -2,14 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Signin from "./pages/Signin.jsx";
 import Signup from "./pages/Signup.jsx";
+import Home from "./pages/Home.jsx";
+import NewTransactions from "./pages/NewTransactions.jsx";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ErrorPage from "./pages/ErrorPage.jsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Signin />,
+		element: <Home />,
+		errorElement: <ErrorPage />,
 	},
 	{
 		path: "/signin",
@@ -18,6 +22,10 @@ const router = createBrowserRouter([
 	{
 		path: "/signup",
 		element: <Signup />,
+	},
+	{
+		path: "/transaction/:type",
+		element: <NewTransactions />,
 	},
 ]);
 

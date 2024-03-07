@@ -2,13 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-body,
-button[type="submit"],
-button {
+body {
 	background: rgb(238, 174, 202);
 	background: radial-gradient(
 		circle,
 		rgba(238, 174, 202, 1) 0%,
 		rgba(148, 187, 233, 1) 100%
 	);
+}
+#submitButton {
+	background: rgb(238, 174, 202);
+	background: radial-gradient(
+		circle,
+		rgba(238, 174, 202, 1) 0%,
+		rgba(148, 187, 233, 1) 100%
+	);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+	width: 8px; /* Largura da barra de rolagem */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #d1d0e7; /* Cor do polegar da barra de rolagem */
+	border-radius: 4px; /* Borda arredondada do polegar */
 }
