@@ -96,9 +96,11 @@ export default function Auth() {
 			<form
           onSubmit={handleSubmitSI(handleSignIn)}
           className="flex flex-col justify-between gap-5 form_content login_form "
-        >
+        ><p className="text-center text-white">Already have an account? <br/> <span>Login</span> </p>
+
+{apiErrors && <ErrorInput text={apiErrors} />}
            <fieldset>
-           <p className="text-center text-white">Already have an account? <br/> <span>Login</span> </p>
+           
             <Input
               type="email"
               label="Email"

@@ -55,15 +55,18 @@ form {
 .login_form {
 	display: flex;
 	justify-self: right;
+	justify-content: center;
+	align-items: center;
 	margin-top: 2rem;
 	margin-right: 0;
 	padding-right: 0;;
 	border: none;
 	color: #fff;
-	font-family: "Italiana"
+	font-family: "Italiana";
+	border: red solid 1px;
 } 
 
-fieldset > p > span {
+.login_form > p > span {
 	text-decoration: underline;
 }
 
