@@ -1,9 +1,9 @@
-import Img from "../assets/payment-method-png-26062.png";
+
 export default function LogoHeader() {
 	return (
 		<div className="flex items-end justify-center text-center w-full">
-			<img src={Img} width="100" alt="logo" />
-			<h1 className="font-bold text-white">DIGITAL WALLET</h1>
+			<p className="title margin-auto ">Welcome to <span>Space Lemons</span>
+			</p>
 		</div>
 	);
 }

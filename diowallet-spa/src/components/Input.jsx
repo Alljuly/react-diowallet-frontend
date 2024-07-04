@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
-export default function Input({ type, placeholder, register, name }) {
+export default function Input({ type, label, register, name }) {
 	return (
+		<>
+		<label>{label}</label>
 		<input
 			type={type}
-			placeholder={placeholder}
-			className="rounded-md p-2 w-full"
+			className="rounded-md p-2"
 			{...register(name)}
 		/>
+		</>
 	);
 }

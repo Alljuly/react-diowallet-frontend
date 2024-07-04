@@ -1,92 +1,127 @@
 import Input from "../components/Input";
 import Button from "../components/Button";
 import LogoHeader from "../components/LogoHeader";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { signupSchema } from "../schemas/SignupSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorInput from "../components/ErrorInput";
-import { signup } from "../services/user";
+import { signupSchema } from "../schemas/SignupSchema";
+import { signinSchema } from "../schemas/SigninSchema";
+import { signup, signin } from "../services/user";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
-export default function Signup() {
-	const navigate = useNavigate();
-	const [apiErrors, setApiErrors] = useState("");
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({ resolver: zodResolver(signupSchema) });
+export default function Auth() {
+  const navigate = useNavigate();
+  const [apiErrors, setApiErrors] = useState("");
 
-	async function handleFormSubmit(data) {
-		try {
-			await signup(data);
-			navigate("/signin");
-		} catch (error) {
-			setApiErrors(error.message);
-		}
-	}
+  const {
+    register: registerSU,
+    handleSubmit: handleSubmitSU,
+    formState: { errors: errorSU },
+  } = useForm({ resolver: zodResolver(signupSchema) });
 
-	return (
-		<>
-			<div className="flex flex-col items-center justify-between  shadow-xl rounded p-8 w-[35rem] h-[35rem]  shadow-xls bg-violet-200/25 text-2xl">
-				<LogoHeader />
-				{apiErrors && <ErrorInput text={apiErrors} />}
-				<form
-					onSubmit={handleSubmit(handleFormSubmit)}
-					className="flex flex-col justify-center gap-2 w-[20rem] text-xl"
-				>
-					<fieldset>
-						<Input
-							type="text"
-							placeholder="Your Name"
-							register={register}
-							name="name"
-						/>
-						{errors.name && <ErrorInput text={errors.name.message} />}
-					</fieldset>
-					<fieldset>
-						<Input
-							type="email"
-							placeholder="Email"
-							register={register}
-							name="email"
-						/>
-						{errors.email && <ErrorInput text={errors.email.message} />}
-					</fieldset>
-					<fieldset>
-						<Input
-							type="password"
-							placeholder="Password"
-							register={register}
-							name="password"
-						/>
-						{errors.password && <ErrorInput text={errors.password.message} />}
-					</fieldset>
-					<fieldset>
-						<Input
-							type="password"
-							placeholder="Confirm Password"
-							register={register}
-							name="confirmPassword"
-						/>
-						{errors.confirmPassword && (
-							<ErrorInput text={errors.confirmPassword.message} />
-						)}
-					</fieldset>
-					<Button type="submit" text="REGISTER" />
-				</form>
-				<p className="text-white text-sm align-center">
-					Already have an account?{" "}
-					<Link
-						to="/signin"
-						className="underline text-gray-400 hover:text-gray-600"
-					>
-						Log in!
-					</Link>
-				</p>
+  const {
+    register: registerSI,
+    handleSubmit: handleSubmitSI,
+    formState: { errors: errorSI },
+  } = useForm({ resolver: zodResolver(signinSchema) });
+
+  async function handleSignUp(data) {
+    try {
+      await signup(data);
+      navigate("/");
+    } catch (error) {
+      setApiErrors(error.message);
+    }
+  }
+
+  async function handleSignIn(data) {
+    try {
+      const token = await signin(data);
+      Cookies.set("token", token.data, { expires: 1 });
+      navigate("/");
+    } catch (error) {
+      setApiErrors(error.message);
+      navigate("/auth");
+    }
+  }
+
+  useEffect(() => {
+    Cookies.remove("token");
+  }, []);
+
+  return (
+    <div className="grid grid-cols-2 shadow-xl rounded p-8 shadow-xls bg-white container">
+      {apiErrors && <ErrorInput text={apiErrors} />}
+		    <div className="Flex flex-col form_content text-center justify-center">
+		    <LogoHeader />
+        <form
+          onSubmit={handleSubmitSU(handleSignUp)}
+          className="flex flex-col justify-center gap-2 w-[20rem] text-xl"
+        > 
+			    <p className="text-center font-bold">Create your account</p>
+             <fieldset>
+               <Input
+                 type="text"
+                 label="Name"
+                 register={registerSU}
+                 name="name"
+               />
+               {errorSU.name && <ErrorInput text={errorSU.name.message} />}
+             </fieldset>
+             <fieldset>
+               <Input
+                 type="email"
+                 label="Email"
+                 register={registerSU}
+                 name="email"
+               />
+               {errorSU.email && <ErrorInput text={errorSU.email.message} />}
+             </fieldset>
+             <fieldset>
+               <Input
+                 type="password"
+                 label="Password"
+                 register={registerSU}
+                 name="password"
+               />
+               {errorSU.password && <ErrorInput text={errorSU.password.message} />}
+             </fieldset>
+             <Button type="submit" text="Continue" className="register"/>
+           </form>
+		  </div>
+		  <div className=" Flex flex-col form_content justify-between">
+
+			<form
+          onSubmit={handleSubmitSI(handleSignIn)}
+          className="flex flex-col justify-between gap-5 form_content login_form "
+        >
+           <fieldset>
+           <p className="text-center text-white">Already have an account? <br/> <span>Login</span> </p>
+            <Input
+              type="email"
+              label="Email"
+              register={registerSI}
+              name="email"
+            />
+            {errorSI.email && <ErrorInput text={errorSI.email.message} />}
+       
+     
+           </fieldset>
+            <fieldset>
+            <Input
+              type="password"
+              label="Password"
+              register={registerSI}
+              name="password"
+            />
+            {errorSI.password && <ErrorInput text={errorSI.password.message} />}
+         
+              </fieldset>
+          <Button type="submit" text="Continue" className="login underline"/>
+        </form>
 			</div>
-		</>
-	);
+    </div>
+  );
 }
